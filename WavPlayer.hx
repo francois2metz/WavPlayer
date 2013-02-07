@@ -409,7 +409,7 @@ class WavPlayer {
             flash.external.ExternalInterface.call("onWavPlayerReady", flash.external.ExternalInterface.objectID);
     }
 	
-    static function initPlayerForUrl(?path: String, ?format: String) {
+	static function initPlayerForUrl(?path: String, ?format: String) {
 		if(path == null && player != null) return;
 		
 		if(path != null && ((~/[.]mp3$/i).match(path) || format == "mp3")) {
