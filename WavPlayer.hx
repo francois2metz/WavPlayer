@@ -367,7 +367,7 @@ class WavPlayer {
 
         iface.drawStopped();
 		
-		initPlayerForUrl(fvs.sound);		
+        initPlayerForUrl(fvs.sound, fvs.format);
         player.volume = volume;
         player.pan = pan;
 		
@@ -409,10 +409,10 @@ class WavPlayer {
             flash.external.ExternalInterface.call("onWavPlayerReady", flash.external.ExternalInterface.objectID);
     }
 	
-	static function initPlayerForUrl(?path: String) {
+    static function initPlayerForUrl(?path: String, ?format: String) {
 		if(path == null && player != null) return;
 		
-		if(path != null && (~/[.]mp3$/i).match(path)) {
+		if(path != null && ((~/[.]mp3$/i).match(path) || format == "mp3")) {
 			if(mp3player == null) {
 				mp3player = new Mp3Player(path);
 				AddPlayerEventListeners(mp3player);
@@ -421,7 +421,7 @@ class WavPlayer {
         }
 		else {
 			if(wavplayer == null) {
-				wavplayer = new Player(path);
+				wavplayer = new Player(path, format);
 				AddPlayerEventListeners(wavplayer);
 			}
 			player = wavplayer;

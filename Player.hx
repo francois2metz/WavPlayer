@@ -28,6 +28,7 @@ class Player extends flash.events.EventDispatcher, implements IPlayer {
     var padding : Array<Float>;
     var in_off : Array<Float>;
     var fname : String;
+    var format : String;
     var first : Bool;
     var timer : flash.utils.Timer;
     var trigger : Null<Float>;
@@ -38,10 +39,11 @@ class Player extends flash.events.EventDispatcher, implements IPlayer {
     public var pan(getPan, setPan): Float;
     public var soundTransform(getST, setST): SoundTransform;
 
-    public function new(?path : String) {
+    public function new(?path : String, ?formattype : String) {
         super();
         schtr = new SoundTransform();
         fname = path;
+        format = formattype;
         asink = null;
         File = null;
     }
@@ -54,31 +56,31 @@ class Player extends flash.events.EventDispatcher, implements IPlayer {
         pitch = new Array<Float>();
         trace("Player for "+fname);
         var slnrx = ~/[.](sln(\d{1,3}))$/i;
-        if ((~/[.]au$/i).match(fname)) {
+        if ((~/[.]au$/i).match(fname) || format == "au") {
             Sound = new fmt.FileAu();
         } else
-        if ((~/[.]wav(49)?$/i).match(fname)) {
+        if ((~/[.]wav(49)?$/i).match(fname) || (~/^wave?$/).match(format)) {
             Sound = new fmt.FileWav();
         } else
-        if ((~/[.](sln|raw)$/i).match(fname)) {
+        if ((~/[.](sln|raw)$/i).match(fname) || (~/^(sln|raw)$/).match(format)) {
             Sound = new fmt.FileSln();
         } else
-        if (slnrx.match(fname)) {
+        if (slnrx.match(fname) || (~/^(sln(\d{1,3}))$/).match(format)) {
             Sound = new fmt.FileSln(Std.parseInt(slnrx.matched(2)) * 1000);
         } else
-        if ((~/[.](alaw|al)$/i).match(fname)) {
+        if ((~/[.](alaw|al)$/i).match(fname) || (~/^(alaw|al)$/).match(format)) {
             Sound = new fmt.FileAlaw();
         } else
-        if ((~/[.](ulaw|ul|pcm|mu)$/i).match(fname)) {
+        if ((~/[.](ulaw|ul|pcm|mu)$/i).match(fname) || (~/^(ulaw|ul|pcm|mu)$/).match(format)) {
             Sound = new fmt.FileUlaw();
         } else
-        if ((~/[.]la$/i).match(fname)) {
+        if ((~/[.]la$/i).match(fname) || format == "la") {
             Sound = new fmt.FileAlawInv();
         } else
-        if ((~/[.]lu$/i).match(fname)) {
+        if ((~/[.]lu$/i).match(fname) || format == "lu") {
             Sound = new fmt.FileUlawInv();
         } else
-        if ((~/[.]gsm$/i).match(fname)) {
+        if ((~/[.]gsm$/i).match(fname) || format == "gsm") {
             Sound = new fmt.FileGsm();
         } else {
             trace("Unsupported file type");
